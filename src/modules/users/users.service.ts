@@ -1,13 +1,13 @@
-import {BadRequestException, ConflictException, HttpException, HttpStatus, Injectable} from "@nestjs/common";
-import {InjectModel} from "@nestjs/sequelize";
+import { HttpStatus, Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
 import * as bcrypt from "bcrypt";
-import {CreateUserDto} from "./dto/create-user.dto";
-import {UserModel} from "./models/user.model";
-import {UpdateUserDto} from "./dto/update-user.dto";
-import {RolesService} from "../roles/roles.service";
-import {Role, RoleModel} from "../roles/models/role.model";
-import {AddRoleDto} from "./dto/add-role.dto";
-import {ApiException} from "../../common/exeptions/ApiException";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UserModel } from "./models/user.model";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { RolesService } from "../roles/roles.service";
+import { RoleModel } from "../roles/models/role.model";
+import { AddRoleDto } from "./dto/add-role.dto";
+import { ApiException } from "../../common/exeptions/ApiException";
 
 @Injectable()
 export class UsersService {
@@ -127,12 +127,24 @@ export class UsersService {
             const hashedPassword = await bcrypt.hash(dto.password, 7);
 
             await user.update({
-                ...dto,
+                email: dto.email,
+                fio: dto.fio,
                 password: hashedPassword
             });
         } else {
-            await user.update(dto);
+            await user.update({
+                email: dto.email,
+                fio: dto.fio
+            });
         }
+
+        const roles: RoleModel[] = await this.rolesService.getRolesByValue(dto.roles);
+
+        const roleIds = roles.map((role) => role.id);
+
+        await user.$set('roles', roleIds);
+
+        user.roles = roles;
 
         return user;
     }

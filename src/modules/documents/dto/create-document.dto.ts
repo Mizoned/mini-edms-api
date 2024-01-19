@@ -4,6 +4,9 @@ export class CreateDocumentDto {
     @ApiProperty({ example: 'Документ', description: 'Название документа' })
     readonly name: string;
 
-    @ApiProperty({ example: '12.12.2024', description: 'Срок выполнения' })
-    readonly deadline: Date;
+    @ApiProperty({ example: '1', description: 'Идентификатор создателя' })
+    readonly reviewerId: number;
+
+    @ApiProperty({ example: 'Файл', description: 'Файл документа' })
+    readonly document: string;
 }

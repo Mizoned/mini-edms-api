@@ -18,7 +18,7 @@ export class CreateUserDto {
     @IsNotEmpty({ message: 'Обязательное поле' })
     readonly password: string;
 
-    @ApiProperty({ example: Object.values(Role), description: 'Пароль' })
+    @ApiProperty({ example: Object.values(Role), description: 'Роли' })
     @IsNotEmpty({ message: 'Обязательное поле' })
     readonly roles: Role[];
 }

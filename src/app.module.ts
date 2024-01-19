@@ -11,6 +11,9 @@ import mainConfig from "./config/main.config";
 import { JwtAuthGuard } from "./modules/auth/guards/jwt-auth.guard";
 import { ApiExceptionFilter } from "./common/filters/api-exception.filter";
 import { ApiValidationPipe } from "./common/pipes/api-validation.pipe";
+import { FilesModule } from './modules/files/files.module';
+import { ServeStaticModule } from "@nestjs/serve-static";
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -29,11 +32,15 @@ import { ApiValidationPipe } from "./common/pipes/api-validation.pipe";
       autoLoadModels: true,
       synchronize: true
     }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, 'static',),
+    }),
     UsersModule,
     DocumentsModule,
     AuthModule,
     TokenModule,
-    RolesModule
+    RolesModule,
+    FilesModule
   ],
   controllers: [],
   providers: [

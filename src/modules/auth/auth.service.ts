@@ -14,7 +14,7 @@ export class AuthService {
     async signIn(dto: LoginUserDto): Promise<Tokens> {
         const user = await this.usersService.getByEmail(dto.email);
 
-        if (!user || !compareSync(dto.password, user.password)) {
+        if (!user || !compareSync(dto.password, user.password) || user.banned === true) {
             throw new ApiException('Ошибка авторизации', HttpStatus.BAD_REQUEST, [
                 {
                     property: 'password',

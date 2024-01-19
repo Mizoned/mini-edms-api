@@ -1,10 +1,19 @@
-import { Table, Column, Model } from 'sequelize-typescript';
+import {Table, Column, Model, BelongsTo, ForeignKey} from 'sequelize-typescript';
 import { ApiProperty } from "@nestjs/swagger";
 import { DataTypes } from "sequelize";
+import {UserModel} from "../../users/models/user.model";
 
 interface DocumentCreationAttrs {
     name: string;
-    deadline: Date;
+    document: string;
+    creatorId: number;
+    reviewerId: number;
+}
+
+export enum StatusDocument {
+    OK = 'OK',
+    CANCELED = 'CANCELED',
+    PROCESS = 'PROCESS'
 }
 
 @Table({ tableName: 'documents' })
@@ -17,7 +26,25 @@ export class DocumentModel extends Model<DocumentModel, DocumentCreationAttrs> {
     @Column({ type: DataTypes.STRING, allowNull: false })
     name: string;
 
-    @ApiProperty({ example: '12.12.2024', description: 'Срок выполнения' })
-    @Column({ type: DataTypes.DATEONLY, allowNull: false })
-    deadline: Date;
+    @ApiProperty({ example: 'Файл DOCX', description: 'Файл документа' })
+    @Column({ type: DataTypes.STRING, allowNull: false })
+    document: string;
+
+    @ApiProperty({ example: true, description: 'Подтверждение от ответственного' })
+    @Column({ type: DataTypes.STRING, defaultValue: StatusDocument.PROCESS })
+    status: string;
+
+    @ForeignKey(() => UserModel)
+    @Column({ type: DataTypes.INTEGER })
+    creatorId: number;
+
+    @BelongsTo(() => UserModel, 'creatorId')
+    creator: UserModel;
+
+    @ForeignKey(() => UserModel)
+    @Column({ type: DataTypes.INTEGER })
+    reviewerId: number;
+
+    @BelongsTo(() => UserModel, 'reviewerId')
+    reviewer: UserModel;
 }
