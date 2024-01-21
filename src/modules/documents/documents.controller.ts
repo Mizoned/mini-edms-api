@@ -47,14 +47,14 @@ export class DocumentsController {
         return await this.documentsService.getAllByReviewerId(id);
     }
 
-    @ApiOperation({ summary: 'Получение документов по id пользователя' })
+    @ApiOperation({ summary: 'Принятие докмента' })
     @ApiResponse({ status: 200, type: DocumentModel })
     @Put('/accept/:id')
     async acceptDocument(@Param('id') id: number): Promise<DocumentModel> {
         return await this.documentsService.acceptDocument(id);
     }
 
-    @ApiOperation({ summary: 'Получение документов по id пользователя' })
+    @ApiOperation({ summary: 'Отклонение документа' })
     @ApiResponse({ status: 200, type: DocumentModel })
     @Put('/reject/:id')
     async rejectDocument(@Param('id') id: number): Promise<DocumentModel> {

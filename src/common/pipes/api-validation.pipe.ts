@@ -8,15 +8,17 @@ export class ApiValidationPipe implements PipeTransform<any> {
     async transform(value: any, metadata: ArgumentMetadata): Promise<any> {
         const obj = plainToInstance(metadata.metatype, value, { });
 
-        const validatedErrors = await validate(obj);
+        if (value && metadata.metatype !== String) {
+            const validatedErrors = await validate(obj);
 
-        if (validatedErrors.length) {
-            let errors = validatedErrors.map(error => ({
-                property: error.property,
-                message: error.constraints[Object.keys(error.constraints)[0]]
-            }));
+            if (validatedErrors.length) {
+                let errors = validatedErrors.map(error => ({
+                    property: error.property,
+                    message: error.constraints[Object.keys(error.constraints)[0]]
+                }));
 
-            throw new ApiException('Ошибка валидации полей', HttpStatus.BAD_REQUEST, errors);
+                throw new ApiException('Ошибка валидации полей', HttpStatus.BAD_REQUEST, errors);
+            }
         }
 
         return value;

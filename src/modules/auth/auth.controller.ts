@@ -54,7 +54,7 @@ export class AuthController {
     @ApiOperation({ summary: 'Обновление refresh токена' })
     @ApiResponse({ status: 200, type: TokensDto  })
     @Get('refresh-tokens')
-    async refresh(@Cookie(REFRESH_TOKEN) refreshToken: string,@Req() req: Request, @Res() res: Response): Promise<Tokens> {
+    async refresh(@Cookie(REFRESH_TOKEN) refreshToken: string, @Req() req: Request, @Res() res: Response): Promise<Tokens> {
         if (!refreshToken) {
             throw new ApiException('Пользователь не авторизован', HttpStatus.UNAUTHORIZED);
         }
